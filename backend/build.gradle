@@ -1,7 +1,6 @@
 buildscript {
 	ext {
 		springBootVersion = '1.5.4.RELEASE'
-        undertowVersion = '1.5.4.RELEASE'
         jacksonVersion = '2.8.8'
 	}
 
@@ -36,9 +35,10 @@ configurations {
 dependencies {
 	compile("org.springframework.boot:spring-boot-starter-data-mongodb")
 	compile("org.springframework.boot:spring-boot-starter-security")
-	compile("org.springframework.boot:spring-boot-starter-web:${undertowVersion}")
-	compile("org.springframework.boot:spring-boot-starter-undertow:${undertowVersion}")
+	compile("org.springframework.boot:spring-boot-starter-web")
+	compile("org.springframework.boot:spring-boot-starter-undertow")
     compile("com.fasterxml.jackson.datatype:jackson-datatype-jsr310:${jacksonVersion}")
 
     testCompile("org.springframework.boot:spring-boot-starter-test")
+	testCompile("de.flapdoodle.embed:de.flapdoodle.embed.mongo")
 }
