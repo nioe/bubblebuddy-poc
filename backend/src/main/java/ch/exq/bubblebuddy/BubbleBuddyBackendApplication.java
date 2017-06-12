@@ -1,0 +1,12 @@
+package ch.exq.bubblebuddy;
+
+import org.springframework.boot.SpringApplication;
+import org.springframework.boot.autoconfigure.SpringBootApplication;
+
+@SpringBootApplication
+public class BubbleBuddyBackendApplication {
+
+	public static void main(String[] args) {
+		SpringApplication.run(BubbleBuddyBackendApplication.class, args);
+	}
+}
