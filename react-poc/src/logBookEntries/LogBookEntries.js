@@ -32,8 +32,8 @@ class LogBookEntries extends Component {
 
     render() {
         return (
-            <div className="LogBookEntries">
-                <table>
+            <div className="logBookEntries">
+                <table className="table table-hover">
                     <thead>
                     <tr>
                         <th>Dive Date</th>
