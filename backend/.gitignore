@@ -3,7 +3,7 @@
 !gradle/wrapper/gradle-wrapper.jar
 
 ### Data ###
-backend/data/
+/data/
 
 ### IntelliJ IDEA ###
 .idea
