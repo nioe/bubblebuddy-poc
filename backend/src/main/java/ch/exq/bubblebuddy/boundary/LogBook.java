@@ -11,6 +11,7 @@ import java.util.List;
 
 @RestController
 @RequestMapping("/logbook")
+@CrossOrigin
 @EnableAutoConfiguration
 public class LogBook {
 
