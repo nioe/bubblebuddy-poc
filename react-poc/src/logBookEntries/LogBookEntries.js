@@ -1,4 +1,5 @@
 import React, {Component} from 'react';
+import xhr from '../xhr';
 import './LogBookEntries.css';
 
 class LogBookEntries extends Component {
@@ -91,23 +92,17 @@ class LogBookEntries extends Component {
     }
 
     fetchLogBookEntries() {
-        return fetch('/logbook')
-            .then(response => response.json())
+        return xhr.get('/logbook')
             .then(result => this.setState({entries: result}))
             .catch(error => console.log('Could not fetch logbook entries...', error));
     }
 
     createLogBookEntry() {
-        return fetch(
-            '/logbook', {
-                method: 'POST',
-                headers: new Headers({"Content-Type": "application/json"}),
-                body: JSON.stringify(this.state.newEntry)
-            });
+        return xhr.post('/logbook', this.state.newEntry);
     }
 
     deleteLogBookEntry(id) {
-        return fetch(`/logbook/${id}`, {method: 'DELETE'}).then(() => this.fetchLogBookEntries());
+        return xhr.deleteHttp(`/logbook/${id}`).then(() => this.fetchLogBookEntries());
     }
 
     fieldChanged(event) {
