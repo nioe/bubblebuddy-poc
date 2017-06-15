@@ -40,7 +40,7 @@ class LogBookEntries extends Component {
                                     <td key="depth">{dive.depth}</td>
                                     <td key="visibility">{dive.visibility}</td>
                                     <td key="action">
-                                        <button type="button" className="btn btn-danger">Delete</button>
+                                        <button type="button" className="btn btn-danger" onClick={() => this.deleteClicked(dive.id)}>Delete</button>
                                     </td>
                                 </tr>
                             );
@@ -69,7 +69,7 @@ class LogBookEntries extends Component {
                         </td>
                         <td key="action">
                             <button type="button" className="btn btn-default"
-                                    onClick={event => this.createLogBookEntry(event)}>Add
+                                    onClick={() => this.addClicked()}>Add
                             </button>
                         </td>
                     </tr>
@@ -77,6 +77,17 @@ class LogBookEntries extends Component {
                 </table>
             </div>
         );
+    }
+
+    addClicked() {
+        this.createLogBookEntry()
+            .then(() => this.fetchLogBookEntries())
+            .then(() => this.resetNewEntry());
+    }
+
+    deleteClicked(id) {
+        this.deleteLogBookEntry(id)
+            .then(() => this.fetchLogBookEntries());
     }
 
     fetchLogBookEntries() {
@@ -92,9 +103,11 @@ class LogBookEntries extends Component {
                 method: 'POST',
                 headers: new Headers({"Content-Type": "application/json"}),
                 body: JSON.stringify(this.state.newEntry)
-            })
-            .then(() => this.fetchLogBookEntries())
-            .then(() => this.resetNewEntry());
+            });
+    }
+
+    deleteLogBookEntry(id) {
+        return fetch(`/logbook/${id}`, {method: 'DELETE'}).then(() => this.fetchLogBookEntries());
     }
 
     fieldChanged(event) {
@@ -106,6 +119,7 @@ class LogBookEntries extends Component {
 
     resetNewEntry() {
         this.setState({newEntry: {diveDate: "", bottomTime: "", diveSite: "", depth: "", visibility: ""}});
+        return Promise.resolve();
     }
 }
 
