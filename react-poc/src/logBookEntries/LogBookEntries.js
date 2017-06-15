@@ -6,26 +6,14 @@ class LogBookEntries extends Component {
     constructor(props) {
         super(props);
         this.state = {entries: [], newEntry: {}};
-
-        this.fieldChanged = this.fieldChanged.bind(this);
     }
 
-    fetchLogBookEntries() {
-        return fetch('/logbook')
-            .then(response => response.json())
-            .catch(error => console.log('Could not fetch logbook entries...', error));
-    }
-
-    fieldChanged(event) {
-        let newEntry = this.state.newEntry;
-        newEntry[event.target.id] = event.target.value;
-
-        this.setState({newEntry: newEntry});
+    componentWillMount() {
+        this.resetNewEntry();
+        this.fetchLogBookEntries();
     }
 
     render() {
-        this.fetchLogBookEntries().then(result => this.setState({entries: result}));
-
         return (
             <div className="logBookEntries">
                 <table className="table table-hover">
@@ -57,38 +45,67 @@ class LogBookEntries extends Component {
                                 </tr>
                             );
                         })
-
-
                     }
                     <tr key="new">
                         <td key="diveDate">
-                            <input id="diveTime" className="form-control" type="datetime-local"
-                                   value={this.state.newEntry.diveDate} onChange={this.fieldChanged}/>
+                            <input id="diveDate" className="form-control" type="datetime-local"
+                                   value={this.state.newEntry.diveDate} onChange={event => this.fieldChanged(event)}/>
                         </td>
                         <td key="bottomTime">
                             <input id="bottomTime" className="form-control" type="text"
-                                   value={this.state.newEntry.bottomTime} onChange={this.fieldChanged}/>
+                                   value={this.state.newEntry.bottomTime} onChange={event => this.fieldChanged(event)}/>
                         </td>
                         <td key="diveSite">
                             <input id="diveSite" className="form-control" type="text"
-                                   value={this.state.newEntry.diveSite} onChange={this.fieldChanged}/>
+                                   value={this.state.newEntry.diveSite} onChange={event => this.fieldChanged(event)}/>
                         </td>
                         <td key="depth">
                             <input id="depth" className="form-control" type="number"
-                                   value={this.state.newEntry.depth} onChange={this.fieldChanged}/>
+                                   value={this.state.newEntry.depth} onChange={event => this.fieldChanged(event)}/>
                         </td>
                         <td key="visibility">
                             <input id="visibility" className="form-control" type="number"
-                                   value={this.state.newEntry.visibility} onChange={this.fieldChanged}/>
+                                   value={this.state.newEntry.visibility} onChange={event => this.fieldChanged(event)}/>
                         </td>
                         <td key="action">
-                            <button type="button" className="btn btn-default">Add</button>
+                            <button type="button" className="btn btn-default"
+                                    onClick={event => this.createLogBookEntry(event)}>Add
+                            </button>
                         </td>
                     </tr>
                     </tbody>
                 </table>
             </div>
         );
+    }
+
+    fetchLogBookEntries() {
+        return fetch('/logbook')
+            .then(response => response.json())
+            .then(result => this.setState({entries: result}))
+            .catch(error => console.log('Could not fetch logbook entries...', error));
+    }
+
+    createLogBookEntry() {
+        return fetch(
+            '/logbook', {
+                method: 'POST',
+                headers: new Headers({"Content-Type": "application/json"}),
+                body: JSON.stringify(this.state.newEntry)
+            })
+            .then(() => this.fetchLogBookEntries())
+            .then(() => this.resetNewEntry());
+    }
+
+    fieldChanged(event) {
+        let newEntry = this.state.newEntry;
+        newEntry[event.target.id] = event.target.value;
+
+        this.setState({newEntry: newEntry});
+    }
+
+    resetNewEntry() {
+        this.setState({newEntry: {diveDate: "", bottomTime: "", diveSite: "", depth: "", visibility: ""}});
     }
 }
 
